@@ -2,14 +2,26 @@ name: Literature Review Helper CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "**" ]
+    branches: [ "main" ]
 
 
 jobs:
-  default:
+  build-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Pipeline Executed
-        run: echo "Execution Not Implemented!"
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build backend
+        run: docker build -f ci/backend/Dockerfile -t backend-build .
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build frontend
+        run: docker build -f ci/frontend/Dockerfile -t frontend-build .
