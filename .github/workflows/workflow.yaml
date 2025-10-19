@@ -48,6 +48,7 @@ jobs:
         SONAR_PROJECT: ${{ vars.SONAR_PROJECT }}
     steps:
       - name: Build backend
+        working-directory: /app
         run: mvn clean package -DskipTests -B
 
   build-and-push-frontend-ci-image:
