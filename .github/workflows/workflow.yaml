@@ -8,14 +8,40 @@ on:
 
 
 jobs:
-  build-backend:
+  build-and-push-backend-ci-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+      - name: Login to registry
+        run: docker login ghcr.io -u ${{ github.actor }} --password-stdin <<<${{ secrets.GITHUB_TOKEN }}
+      - name: Build backend CI image
+        run: docker build -f ci/backend/Dockerfile -t ghcr.io/${{ github.repository_owner }}/backend-builder:latest .
+      - name: Push backend CI image
+        run: docker push ghcr.io/${{ github.repository_owner }}/backend-builder:latest
+  
+  run-static-analysis-backend:
+    runs-on: ubuntu-latest
+    needs: build-and-push-backend-ci-image
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/backend-builder:latest
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - name: Run static analysis on backend code
+        working-directory: /app
+        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B
+
+  build-backend:
+    runs-on: ubuntu-latest
+    needs: run-static-analysis-backend
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/backend-builder:latest
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
       - name: Build backend
-        run: docker build -f ci/backend/Dockerfile -t backend-build .
+        run: mvn clean package -DskipTests -B
 
   build-frontend:
     runs-on: ubuntu-latest
