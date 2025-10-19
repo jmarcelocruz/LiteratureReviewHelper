@@ -31,6 +31,7 @@
         <java.version>17</java.version>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
+		<sonar.java.binaries>target/classes</sonar.java.binaries>
     </properties>
 	<dependencies>
 		<dependency>
