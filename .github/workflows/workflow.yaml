@@ -33,7 +33,7 @@ jobs:
       - name: Run static analysis on backend code
         working-directory: /app
         run: >
-          mvn compile org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B
+          mvn compile test jacoco:report sonar:sonar -B
           -Dsonar.organization=$SONAR_ORGANIZATION
           -Dsonar.projectKey=$SONAR_PROJECT
 
