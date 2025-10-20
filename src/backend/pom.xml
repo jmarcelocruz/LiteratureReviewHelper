@@ -32,6 +32,11 @@
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
 		<sonar.java.binaries>target/classes</sonar.java.binaries>
+		<sonar.exclusions>
+			src/main/java/pt/isec/literaturereviewhelper/ServletInitializer.java,
+			src/main/java/pt/isec/literaturereviewhelper/LiteratureReviewHelperApplication.java,
+			src/main/java/pt/isec/literaturereviewhelper/controllers/HealthStatusController.java
+		</sonar.exclusions>
     </properties>
 	<dependencies>
 		<dependency>
